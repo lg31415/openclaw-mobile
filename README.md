@@ -28,8 +28,14 @@ OpenClaw Android 移动应用，基于 Capacitor/WebView 技术构建。
 
 ## 编译
 
+### macOS / Linux
 ```bash
 ./gradlew assembleDebug
+```
+
+### Windows
+```cmd
+gradlew.bat assembleDebug
 ```
 
 APK 输出位置：`app/build/outputs/apk/debug/app-debug.apk`
