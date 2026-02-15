@@ -24,35 +24,28 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         
-      - name: Show Android SDK info
-        run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
-          ls -la $ANDROID_HOME
-          
       - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          cat local.properties
           
       - name: Build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --info 2>&1 | tail -100
+          ./gradlew assembleDebug
           
       - name: Upload debug APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: debug-apk
+          name: openclaw-mobile-debug.apk
           path: app/build/outputs/apk/debug/app-debug.apk
           
-      - name: Create Release (if release)
-        if: github.event_name == 'release' && success()
+      - name: Upload to Release (on release)
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
           files: app/build/outputs/apk/release/app-release.apk
           body: |
             ## OpenClaw Mobile Release
+            Download the APK from the artifacts below.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
